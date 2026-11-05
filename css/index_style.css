@@ -1,0 +1,336 @@
+/* =========================================
+   12 CHAN - DISEÑO PRINCIPAL (PANTALLA COMPLETA)
+========================================= */
+@font-face {
+    font-family: 'ChillerCustom';
+    src: url('../fonts/chiller.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'InterRegular';
+    src: url('../fonts/inter.28pt.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'InterMedium';
+    src: url('../fonts/inter.28pt-medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('../fonts/inter.28pt-semibold.ttf') format('truetype');
+}
+
+h1 {
+    font-family: 'InterSemiBold', sans-serif;
+}
+
+p {
+    font-family: 'InterRegular', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    font-family: 'InterRegular';
+    background-color: #e0e0e0;
+    color: #111111;
+    overflow-x: hidden; /* Evita scroll horizontal no deseado */
+}
+
+/* =========================================
+   ENCABEZADO FLOTANTE
+========================================= */
+
+.encabezado {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 45px;
+    padding: 35px 8%;
+    z-index: 10;
+    background: transparent;
+}
+
+.logo {
+    font-family: 'InterSemiBold';
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.logo-icono {
+    width: 20px;   /* Reduce el ancho del contenedor */
+    height: 20px;  /* Reduce la altura del contenedor */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+}
+
+.logo-icono img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.navegacion {
+    font-size: 16px;
+    color: #444444;
+}
+
+/* =========================================
+   PRESENTACIÓN (SECCIÓN 1 - PANTALLA COMPLETA)
+========================================= */
+
+.presentacion {
+    position: relative;
+    width: 100vw;
+    height: 100vh; /* Obliga a que ocupe exactamente toda la altura de la pantalla */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8%;
+    
+    /* El degradado radial original del prototipo */
+    background: radial-gradient(circle at 65% 45%, #eeeeee 0%, #dcdcdc 45%, #c2c2c2 100%);
+}
+
+.presentacion-texto {
+    width: 50%;
+    z-index: 2;
+    font-family: 'InterSemiBold', sans-serif;
+}
+
+.presentacion h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.presentacion h1 span {
+    color: #007548;
+}
+
+.presentacion-texto p {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+.presentacion-texto p span {
+    color: #007548;
+    font-weight: bold;
+}
+
+/* BOTÓN */
+
+.btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background-color: #007548;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #005c38;
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   MONSTRUO
+========================================= */
+
+.monster-box {
+    width: 42%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-family: 'ChillerCustom', cursive;
+    font-size: 28px; /* Suele requerir más tamaño por el diseño */
+}
+
+.illustration-placeholder {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.illustration-placeholder img {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    object-fit: contain;
+}
+
+.monster-texto-izquierdo {
+    position: absolute;
+    left: -5%;
+    bottom: 25%;
+    font-size: 35px;
+    font-family: 'ChillerCustom', cursive;
+    transform: rotate(-12deg);
+}
+
+.monster-texto-derecho {
+    position: absolute;
+    right: -10%;
+    bottom: 30%;
+    font-family: 'ChillerCustom', cursive;
+    font-size: 30px;
+    transform: rotate(-10deg);
+}
+
+/* INDICACIÓN DE DESPLAZAMIENTO */
+
+.indicacion {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    color: #555555;
+    letter-spacing: 0.5px;
+}
+
+/* =========================================
+   INFORMACIÓN (SECCIÓN 2 - ABAJO)
+========================================= */
+
+.informacion {
+    width: 100vw;
+    min-height: 100vh; /* Ocupa otra pantalla completa al deslizar */
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 15%;
+}
+
+.info-container {
+    max-width: 900px;
+}
+
+.informacion h2 {
+    color: #007548;
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+}
+
+.informacion p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    color: #222222;
+}
+
+/* =========================================
+   PIE DE PÁGINA
+========================================= */
+
+.pie {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 25px 10%;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.pie strong {
+    font-size: 16px;
+}
+.logo-footer {
+    width: 24px;   /* Tamaño controlado del ícono */
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent; /* Quitamos cualquier fondo */
+    border-radius: 0;
+}
+
+.logo-footer img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: screen; /* Esto hace que el fondo blanco del PNG desaparezca sobre el fondo negro */
+}
+
+.pie span {
+    font-size: 12px;
+}
+
+/* =========================================
+   DISEÑO RESPONSIVE
+========================================= */
+
+@media screen and (max-width: 900px) {
+    .presentacion {
+        flex-direction: column;
+        justify-content: center;
+        height: auto;
+        min-height: 100vh;
+        padding: 100px 7% 50px;
+    }
+
+    .presentacion-texto {
+        width: 100%;
+        text-align: center;
+    }
+
+    .monster-box {
+        width: 80%;
+        margin-top: 30px;
+    }
+
+    .encabezado {
+        padding: 20px 7%;
+    }
+}
+
+/* Activa el desplazamiento suave en toda la página */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Estilos para el menú de botones en el encabezado */
+.menu-navegacion {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333333;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #007548;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
