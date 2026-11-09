@@ -30,18 +30,18 @@ try {
 <head>
     <meta charset="UTF-8">
     <title>12 CHAN - Hilo #<?php echo $hilo['Pub_ID']; ?></title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/board_style.css">
 </head>
 <body>
 
     <header>
         <h1>12 CHAN</h1>
         <nav>
-            <a href="board.php">&larr; Volver al tablón</a>
+            <a href="board.php?tablero=<?php echo urlencode($hilo['Tablero']); ?>">&larr; Volver al tablón</a>
         </nav>
     </header>
 
-    <main>
+    <main class="main-layout" style="display: block; padding: 40px 8%;">
         <article class="post-card main-thread">
             <?php if (!empty($hilo['Imagen'])): ?>
                 <div class="post-img">
@@ -55,7 +55,7 @@ try {
             </div>
         </article>
 
-        <hr>
+        <hr style="margin: 20px 0;">
         <h3>Respuestas (<?php echo count($respuestas); ?>)</h3>
 
         <section class="replies-section">
@@ -63,7 +63,7 @@ try {
                 <p>No hay respuestas aún. ¡Sé el primero en comentar!</p>
             <?php else: ?>
                 <?php foreach ($respuestas as $resp): ?>
-                    <div class="reply-card">
+                    <div class="reply-card" style="background: #fff; padding: 15px; margin-bottom: 10px; border-radius: 5px;">
                         <p><strong><?php echo htmlspecialchars($resp['Nom_User']); ?></strong> - <span><?php echo $resp['Fecha_Res']; ?></span></p>
                         <p><?php echo nl2br(htmlspecialchars($resp['Mensaje'])); ?></p>
                     </div>
