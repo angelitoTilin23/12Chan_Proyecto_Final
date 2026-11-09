@@ -1,9 +1,12 @@
+<?php
+$tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>12 CHAN - Tablón</title>
-     <link rel="stylesheet" href="../css/board_style.css">
+    <link rel="stylesheet" href="css/board_style.css">
 </head>
 <body>
 
@@ -15,7 +18,7 @@
     </header>
 
     <main class="main-layout">
-        <!-- Menú lateral con los tablones oficiales del proyecto -->
+        <!-- Menú lateral con los tablones oficiales -->
         <aside class="boards-sidebar">
             <div class="boards-actions">
                 <input type="text" placeholder="Buscar tableros...">
@@ -50,12 +53,12 @@
             </div>
         </aside>
 
-        <!-- Contenido principal del tablón -->
+        <!-- Contenido principal -->
         <section class="content-section">
             <div class="form-container">
                 <h3>Compartir en el tablón</h3>
                 <form action="crear_hilo.php" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="tablero" value="general">
+                    <input type="hidden" name="tablero" value="<?php echo htmlspecialchars($tablero_actual); ?>">
                     
                     <div>
                         <label>Nombre</label>
@@ -89,7 +92,8 @@
                     $pdo = new PDO("mysql:host=localhost;dbname=12chan;charset=utf8mb4", "root", "");
                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                    $stmt = $pdo->query("SELECT * FROM publicaciones ORDER BY Pub_ID DESC");
+                    $stmt = $pdo->prepare("SELECT * FROM publicaciones WHERE Tablero = ? ORDER BY Pub_ID DESC");
+                    $stmt->execute([$tablero_actual]);
                     
                     while ($pub = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         echo "<article class='post-card'>";
