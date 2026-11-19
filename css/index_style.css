@@ -3,22 +3,22 @@
 ========================================= */
 @font-face {
     font-family: 'ChillerCustom';
-    src: url('../fonts/chiller.ttf') format('truetype');
+    src: url('../css/fonts/chiller.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'InterRegular';
-    src: url('../fonts/inter.28pt.ttf') format('truetype');
+    src: url('../css/fonts/inter.28pt.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'InterMedium';
-    src: url('../fonts/inter.28pt-medium.ttf') format('truetype');
+    src: url('../css/fonts/inter.28pt-medium.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'InterSemiBold';
-    src: url('../fonts/inter.28pt-semibold.ttf') format('truetype');
+    src: url('../css/fonts/inter.28pt-semibold.ttf') format('truetype');
 }
 
 h1 {

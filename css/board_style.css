@@ -1,0 +1,589 @@
+/* ==========================================
+   12 CHAN - BOARD DESIGN
+   Estilo principal del tablón
+========================================== */
+@font-face {
+    font-family: 'ChillerCustom';
+    src: url('../css/fonts/chiller.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'InterRegular';
+    src: url('../css/fonts/inter.28pt.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'InterMedium';
+    src: url('../css/fonts/inter.28pt-medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('../css/fonts/inter.28pt-semibold.ttf') format('truetype');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #e8e8e8;
+    color: #222222;
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+header {
+    width: 100%;
+    min-height: 85px;
+    background-color: #f7f7f7;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 20px 7%;
+    border-bottom: 1px solid #d5d5d5;
+
+    font-family: 'InterSemiBold';
+}
+
+.salir {
+    text-decoration: none;
+    color: #333333;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.salir:hover{
+    color: #007548;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.logo {
+    font-family: 'InterSemiBold';
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.logo-icono {
+    width: 20px;   /* Reduce el ancho del contenedor */
+    height: 20px;  /* Reduce la altura del contenedor */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+}
+
+.logo-icono img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+header h1 {
+    font-size: 25px;
+    font-weight: 800;
+    color: #007548;
+    letter-spacing: 1px;
+}
+
+header nav a {
+    text-decoration: none;
+    color: #333333;
+    font-size: 15px;
+    font-weight: bold;
+
+    transition: color 0.3s ease;
+}
+
+header nav a:hover {
+    color: #007548;
+}
+
+/* ==========================================
+   DISTRIBUCIÓN GENERAL
+========================================== */
+
+.main-layout {
+    display: grid;
+    grid-template-columns: 270px minmax(0, 1fr);
+    gap: 30px;
+
+    width: 90%;
+    max-width: 1450px;
+
+    margin: 35px auto;
+    align-items: start;
+}
+
+/* ==========================================
+   BARRA LATERAL
+========================================== */
+
+.boards-sidebar {
+    background-color: #f7f7f7;
+    border: 1px solid #d8d8d8;
+    border-radius: 10px;
+
+    padding: 20px;
+
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Buscador y botón */
+
+.boards-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    margin-bottom: 25px;
+}
+
+.boards-actions input {
+    width: 100%;
+    padding: 11px 12px;
+
+    border: 1px solid #cccccc;
+    border-radius: 7px;
+
+    font-size: 14px;
+    outline: none;
+}
+
+.boards-actions input:focus {
+    border-color: #007548;
+    box-shadow: 0 0 0 2px rgba(0, 117, 72, 0.10);
+}
+
+.boards-actions button {
+    width: 100%;
+    padding: 11px;
+
+    background-color: #007548;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.boards-actions button:hover {
+    background-color: #005c38;
+}
+
+/* Categorías */
+
+.board-category {
+    margin-bottom: 25px;
+}
+
+.board-category h3 {
+    font-size: 13px;
+    font-weight: 800;
+    color: #007548;
+
+    letter-spacing: 1px;
+
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+
+    border-bottom: 1px solid #dddddd;
+}
+
+.board-category ul {
+    list-style: none;
+}
+
+.board-category li {
+    margin-bottom: 3px;
+}
+
+.board-category li a {
+    display: block;
+
+    padding: 9px 10px;
+
+    color: #333333;
+    text-decoration: none;
+    font-size: 14px;
+
+    border-radius: 6px;
+
+    transition: all 0.2s ease;
+}
+
+.board-category li a:hover {
+    background-color: #e4f2eb;
+    color: #007548;
+    padding-left: 15px;
+}
+
+/* ==========================================
+   CONTENIDO PRINCIPAL
+========================================== */
+
+.content-section {
+    min-width: 0;
+}
+
+/* ==========================================
+   FORMULARIO DE PUBLICACIÓN
+========================================== */
+
+.form-container {
+    background-color: #f7f7f7;
+
+    padding: 28px;
+    border: 1px solid #d8d8d8;
+    border-radius: 10px;
+
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+}
+
+.form-container h3 {
+    color: #007548;
+    font-size: 21px;
+
+    margin-bottom: 22px;
+}
+
+/* Espaciado de campos */
+
+.form-container form > div {
+    margin-bottom: 18px;
+}
+
+.form-container label {
+    display: block;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    margin-bottom: 8px;
+    color: #333333;
+}
+
+/* Campos de texto */
+
+.form-container input[type="text"],
+.form-container textarea {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+
+    color: #222222;
+    background-color: #ffffff;
+
+    border: 1px solid #cccccc;
+    border-radius: 7px;
+
+    outline: none;
+    transition: border 0.2s ease;
+}
+
+.form-container input[type="text"]:focus,
+.form-container textarea:focus {
+    border-color: #007548;
+}
+
+/* Área de comentario */
+
+.form-container textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+}
+
+/* Selector de archivo */
+
+.archivo-btn {
+    display: flex;
+    align-items: center;       /* Centra verticalmente */
+    justify-content: center;   /* ¡Asegúrate de que esté en center para centrar horizontalmente todo el contenido! */
+    gap: 10px;
+
+    width: 100%;
+    min-height: 50px;
+    padding: 12px;
+
+    background-color: #ffffff;
+    border: 1px dashed #bbbbbb;
+    border-radius: 7px;
+
+    font-size: 14px;
+    color: #333333;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.archivo-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.archivo-btn:hover {
+    background-color: #e4f2eb;
+    border-color: #007548;
+    color: #007548;
+}
+
+/* Botón publicar */
+
+.form-container button[type="submit"] {
+    padding: 13px 22px;
+
+    background-color: #007548;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-container button[type="submit"]:hover {
+    background-color: #005c38;
+    transform: translateY(-2px);
+}
+
+/* Separador */
+
+.content-section hr {
+    border: none;
+    border-top: 1px solid #cccccc;
+    margin: 30px 0;
+}
+
+/* ==========================================
+   PUBLICACIONES
+========================================== */
+
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.post-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+
+    background-color: #f7f7f7;
+
+    padding: 22px;
+
+    border: 1px solid #d8d8d8;
+    border-radius: 10px;
+
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+
+    transition: border 0.2s ease;
+}
+
+.post-card:hover {
+    border-color: #a8cbb9;
+}
+
+/* Imágenes de las publicaciones */
+
+.post-img {
+    flex: 0 0 160px;
+    max-width: 160px;
+}
+
+.post-img img {
+    display: block;
+
+    width: 100%;
+    max-height: 180px;
+
+    object-fit: cover;
+
+    border-radius: 7px;
+    border: 1px solid #dddddd;
+}
+
+/* Texto de publicaciones */
+
+.post-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.post-content h4 {
+    font-size: 20px;
+    color: #007548;
+
+    margin-bottom: 10px;
+    overflow-wrap: anywhere;
+}
+
+.post-content p {
+    font-size: 14px;
+    line-height: 1.6;
+
+    margin-bottom: 12px;
+    overflow-wrap: anywhere;
+}
+
+.post-content p strong {
+    color: #222222;
+}
+
+.post-content p span {
+    color: #777777;
+    font-size: 12px;
+}
+
+/* Enlace a respuestas */
+
+.post-content a {
+    color: #007548;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.post-content a:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
+   PIE DE PÁGINA
+========================================= */
+
+.pie {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 25px 10%;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.pie strong {
+    font-size: 16px;
+}
+.logo-footer {
+    width: 24px;   /* Tamaño controlado del ícono */
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent; /* Quitamos cualquier fondo */
+    border-radius: 0;
+}
+
+.logo-footer img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: screen; /* Esto hace que el fondo blanco del PNG desaparezca sobre el fondo negro */
+}
+
+.pie span {
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media screen and (max-width: 1000px) {
+
+    .main-layout {
+        grid-template-columns: 230px minmax(0, 1fr);
+        gap: 20px;
+        width: 94%;
+    }
+
+    .boards-sidebar {
+        padding: 15px;
+    }
+
+    .form-container {
+        padding: 22px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+
+    header {
+        padding: 20px 5%;
+        min-height: 70px;
+    }
+
+    header h1 {
+        font-size: 21px;
+    }
+
+    .main-layout {
+        display: flex;
+        flex-direction: column;
+        width: 94%;
+        margin: 20px auto;
+    }
+
+    .boards-sidebar {
+        width: 100%;
+    }
+
+    .content-section {
+        width: 100%;
+    }
+
+    .post-card {
+        flex-direction: column;
+    }
+
+    .post-img {
+        flex: auto;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .post-img img {
+        max-height: 300px;
+        object-fit: contain;
+    }
+
+    .form-container {
+        padding: 18px;
+    }
+
+    .form-container button[type="submit"] {
+        width: 100%;
+    }
+}

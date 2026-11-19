@@ -1,127 +1,617 @@
+
 <?php
+// ==========================================
+// CONEXIÓN A LA BASE DE DATOS
+// ==========================================
+
+$host = "127.0.0.1";
+$port = "3307";
+$dbname = "12chan";
+$user = "root";
+$password = "";
+
+try {
+    $pdo = new PDO(
+        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",
+        $user,
+        $password
+    );
+
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    die("Error de conexión: " . $e->getMessage());
+}
+
+// ==========================================
+// TABLERO ACTUAL
+// ==========================================
+
 $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
+
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>12 CHAN - Tablón</title>
-    <link rel="stylesheet" href="css/board_style.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>12 CHAN - Tablón: /<?php echo htmlspecialchars($tablero_actual); ?>/</title>
+
+    <link rel="stylesheet" href="../css/board_style.css">
 </head>
+
 <body>
 
+    <!-- ==================================
+         ENCABEZADO
+    =================================== -->
+
     <header>
-        <h1>12 CHAN</h1>
-        <nav>
-            <a href="index.php">&larr; Volver al inicio</a>
-        </nav>
+
+        <div class="logo">
+
+            <div class="logo-icono">
+                <img src="../css/img/Isotipo_fverde.png" alt="12 CHAN Logo">
+            </div>
+
+            <span>12 CHAN</span>
+
+        </div>
+
+        <div>
+            <a href="index.php" class="salir">Cerrar Sesión</a>
+        </div>
+
     </header>
 
+
+    <!-- ==================================
+         ESTRUCTURA PRINCIPAL
+    =================================== -->
+
     <main class="main-layout">
-        <!-- Menú lateral con los tablones oficiales -->
+
+        <!-- MENÚ LATERAL DE TABLEROS -->
+
         <aside class="boards-sidebar">
+
             <div class="boards-actions">
-                <input type="text" placeholder="Buscar tableros...">
-                <button type="button">Crear tablero</button>
+
+                <input
+                    type="text"
+                    id="buscadorTableros"
+                    placeholder="Buscar tableros..."
+                    onkeyup="filtrarTableros()"
+                >
+
+                <!-- Crear nuevas comunidades -->
+
+                <div style="margin-top: 10px;">
+
+                    <input
+                        type="text"
+                        id="nuevoTableroInput"
+                        placeholder="Nombre nuevo tablero..."
+                        style="margin-bottom: 5px;"
+                    >
+
+                    <button type="button" onclick="crearTablero()">
+                        Crear tablero
+                    </button>
+
+                </div>
+
             </div>
 
+
+            <!-- COMUNIDADES CREADAS -->
+
+            <div class="board-category" id="seccionComunidades">
+
+                <h3>COMUNIDADES</h3>
+
+                <ul id="listaComunidades" class="lista-enlaces">
+                    <!-- Comunidades cargadas dinámicamente -->
+                </ul>
+
+            </div>
+
+
+            <!-- CATEGORÍA CULTURA -->
+
             <div class="board-category">
+
                 <h3>CULTURA</h3>
-                <ul>
+
+                <ul class="lista-enlaces">
+
                     <li><a href="board.php?tablero=cultura_japonesa">Cultura japonesa</a></li>
+
                     <li><a href="board.php?tablero=anime_manga">Anime y manga</a></li>
+
                     <li><a href="board.php?tablero=anime_cultura">Anime y cultura</a></li>
+
                     <li><a href="board.php?tablero=anime_flash">Anime y fondos de pantalla Flash</a></li>
+
                     <li><a href="board.php?tablero=cosplay_egl">Cosplay y EGL</a></li>
+
                     <li><a href="board.php?tablero=cultura_pop">Cultura pop</a></li>
+
                 </ul>
+
             </div>
 
+
+            <!-- CATEGORÍA ENTRETENIMIENTO -->
+
             <div class="board-category">
+
                 <h3>ENTRETENIMIENTO</h3>
-                <ul>
+
+                <ul class="lista-enlaces">
+
                     <li><a href="board.php?tablero=youtubers_virtuales">YouTubers virtuales</a></li>
+
                     <li><a href="board.php?tablero=videojuegos">Videojuegos</a></li>
+
                     <li><a href="board.php?tablero=videojuegos_retro">Videojuegos retro</a></li>
+
                     <li><a href="board.php?tablero=videojuegos_generales">Videojuegos generales</a></li>
+
                     <li><a href="board.php?tablero=videojuegos_multijugador">Videojuegos multijugador</a></li>
+
                     <li><a href="board.php?tablero=pokemon">Pokémon</a></li>
+
                     <li><a href="board.php?tablero=juegos_ritmo">Juegos de ritmo</a></li>
+
                     <li><a href="board.php?tablero=videojuegos_rol">Videojuegos de rol</a></li>
+
                     <li><a href="board.php?tablero=estrategia">Estrategia</a></li>
+
                 </ul>
+
             </div>
+
         </aside>
 
-        <!-- Contenido principal -->
+
+        <!-- ==================================
+             CONTENIDO PRINCIPAL
+        =================================== -->
+
         <section class="content-section">
-            <div class="form-container">
-                <h3>Compartir en el tablón</h3>
-                <form action="crear_hilo.php" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="tablero" value="<?php echo htmlspecialchars($tablero_actual); ?>">
-                    
-                    <div>
-                        <label>Nombre</label>
-                        <input type="text" name="nom_user" placeholder="Anónimo">
-                    </div>
 
-                    <div>
-                        <label>Asunto</label>
-                        <input type="text" name="titulo" required>
-                    </div>
+            <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
 
-                    <div>
-                        <label>Comentario</label>
-                        <textarea name="mensaje" rows="3" required placeholder="Escribe algo..."></textarea>
-                    </div>
+                <h2 style="color: #007548;">
+                    Tablón: /<?php echo htmlspecialchars($tablero_actual); ?>/
+                </h2>
 
-                    <div>
-                        <label>Seleccionar archivo</label>
-                        <input type="file" name="imagen" accept="image/*">
-                    </div>
+                <button
+                    type="button"
+                    onclick="toggleFormulario()"
+                    id="btnToggleForm"
+                    style="padding: 11px 20px; background-color: #007548; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;"
+                >
+                    + Crear publicación
+                </button>
 
-                    <button type="submit">Compartir ahora</button>
-                </form>
             </div>
+
+
+            <!-- ==================================
+                 FORMULARIO DE PUBLICACIONES
+            =================================== -->
+
+            <div
+                class="form-container"
+                id="formPublicarContainer"
+                style="display: none; margin-bottom: 25px;"
+            >
+
+                <h3>
+                    Compartir en el tablón: /<?php echo htmlspecialchars($tablero_actual); ?>/
+                </h3>
+
+                <form
+                    action="crear_hilo.php"
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+
+                    <input
+                        type="hidden"
+                        name="tablero"
+                        value="<?php echo htmlspecialchars($tablero_actual); ?>"
+                    >
+
+
+                    <div>
+
+                        <label>Nombre</label>
+
+                        <input
+                            type="text"
+                            name="nom_user"
+                            placeholder="Anónimo"
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label>Asunto</label>
+
+                        <input
+                            type="text"
+                            name="titulo"
+                            required
+                            placeholder="Escribe algo..."
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label>Comentario</label>
+
+                        <textarea
+                            name="mensaje"
+                            rows="3"
+                            required
+                            placeholder="Escribe algo..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div>
+
+                        <label>Seleccionar archivo</label>
+
+                        <label for="imagen" class="archivo-btn">
+
+                            <img
+                                src="../css/img/icono_archivos.png"
+                                alt="Icono de archivo"
+                            >
+
+                        </label>
+
+                        <input
+                            type="file"
+                            id="imagen"
+                            name="imagen"
+                            accept="image/*"
+                            hidden
+                        >
+
+                    </div>
+
+
+                    <button type="submit">
+                        Compartir ahora en /<?php echo htmlspecialchars($tablero_actual); ?>/
+                    </button>
+
+                </form>
+
+            </div>
+
 
             <hr>
 
-            <div class="posts-list">
-                <?php
-                try {
-                    $pdo = new PDO("mysql:host=localhost;dbname=12chan;charset=utf8mb4", "root", "");
-                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                    $stmt = $pdo->prepare("SELECT * FROM publicaciones WHERE Tablero = ? ORDER BY Pub_ID DESC");
+            <!-- ==================================
+                 LISTADO DE PUBLICACIONES
+            =================================== -->
+
+            <div class="posts-list">
+
+                <?php
+
+                try {
+
+                    $stmt = $pdo->prepare(
+                        "SELECT * FROM publicaciones
+                         WHERE Tablero = ?
+                         ORDER BY Pub_ID DESC"
+                    );
+
                     $stmt->execute([$tablero_actual]);
-                    
-                    while ($pub = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        echo "<article class='post-card'>";
-                        
-                        if (!empty($pub['Imagen'])) {
-                            echo "<div class='post-img'><a href='{$pub['Imagen']}' target='_blank'><img src='{$pub['Imagen']}' alt='Imagen'></a></div>";
+
+                    $publicaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+                    if (empty($publicaciones)) {
+
+                        echo "<p>No hay publicaciones en este tablero todavía. ¡Sé el primero en compartir algo!</p>";
+
+                    } else {
+
+                        foreach ($publicaciones as $pub) {
+
+                            echo "<article class='post-card'>";
+
+
+                            // IMAGEN DE LA PUBLICACIÓN
+
+                            if (!empty($pub['Imagen'])) {
+
+                                $imagen = htmlspecialchars(
+                                    $pub['Imagen'],
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                );
+
+                                echo "<div class='post-img'>";
+
+                                echo "<a href='$imagen' target='_blank' rel='noopener noreferrer'>";
+
+                                echo "<img src='$imagen' alt='Imagen'>";
+
+                                echo "</a>";
+
+                                echo "</div>";
+
+                            }
+
+
+                            // CONTENIDO DE LA PUBLICACIÓN
+
+                            echo "<div class='post-content'>";
+
+
+                            echo "<h4>" .
+                                htmlspecialchars($pub['Titulo']) .
+                                "</h4>";
+
+
+                            echo "<p><strong>" .
+                                htmlspecialchars($pub['Nom_User']) .
+                                "</strong> - <span>" .
+                                htmlspecialchars($pub['T_Pub']) .
+                                "</span> (No. " .
+                                htmlspecialchars($pub['Pub_ID']) .
+                                ")</p>";
+
+
+                            echo "<p>" .
+                                nl2br(htmlspecialchars($pub['Mensaje'])) .
+                                "</p>";
+
+
+                            // ENLACE AL HILO
+
+                            echo "<p>";
+
+                            echo "<a href='hilo.php?id=" .
+                                urlencode($pub['Pub_ID']) .
+                                "'>Ver respuestas y comentar</a>";
+
+                            echo "</p>";
+
+
+                            echo "</div>";
+
+                            echo "</article>";
+
                         }
-                        
-                        echo "<div class='post-content'>";
-                        echo "<h4>" . htmlspecialchars($pub['Titulo']) . "</h4>";
-                        echo "<p><strong>" . htmlspecialchars($pub['Nom_User']) . "</strong> - <span>" . $pub['T_Pub'] . "</span> (No. {$pub['Pub_ID']})</p>";
-                        echo "<p>" . nl2br(htmlspecialchars($pub['Mensaje'])) . "</p>";
-                        echo "<p><a href='hilo.php?id={$pub['Pub_ID']}'>Ver respuestas y comentar</a></p>";
-                        echo "</div>";
-                        
-                        echo "</article>";
+
                     }
+
                 } catch (PDOException $e) {
-                    echo "<p style='color: red;'>Error al conectar con la base de datos.</p>";
+
+                    echo "<p style='color: red;'>Error al consultar la base de datos.</p>";
+
                 }
+
                 ?>
+
             </div>
+
         </section>
+
     </main>
 
-    <footer>
-        <p>12 CHAN Imageboard Project v1.0</p>
+
+    <!-- ==================================
+         JAVASCRIPT
+         GESTIÓN DE COMUNIDADES Y BUSCADOR
+    =================================== -->
+
+    <script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        cargarComunidades();
+
+    });
+
+
+    // MOSTRAR Y OCULTAR FORMULARIO
+
+    function toggleFormulario() {
+
+        const formContainer = document.getElementById('formPublicarContainer');
+
+        const btn = document.getElementById('btnToggleForm');
+
+
+        if (formContainer.style.display === 'none') {
+
+            formContainer.style.display = 'block';
+
+            btn.textContent = 'Cancelar publicación';
+
+            btn.style.backgroundColor = '#555';
+
+        } else {
+
+            formContainer.style.display = 'none';
+
+            btn.textContent = '+ Crear publicación';
+
+            btn.style.backgroundColor = '#007548';
+
+        }
+
+    }
+
+
+    // CREAR NUEVA COMUNIDAD
+
+    function crearTablero() {
+
+        const input = document.getElementById('nuevoTableroInput');
+
+        let nombre = input.value.trim().toLowerCase().replace(/\s+/g, '_');
+
+
+        if (!nombre) {
+
+            alert('Escribe un nombre para la comunidad.');
+
+            return;
+
+        }
+
+
+        let comunidades = JSON.parse(
+            localStorage.getItem('mis_comunidades')
+        ) || [];
+
+
+        if (!comunidades.includes(nombre)) {
+
+            comunidades.push(nombre);
+
+            localStorage.setItem(
+                'mis_comunidades',
+                JSON.stringify(comunidades)
+            );
+
+        }
+
+
+        window.location.href =
+            'board.php?tablero=' + encodeURIComponent(nombre);
+
+    }
+
+
+    // CARGAR COMUNIDADES GUARDADAS
+
+    function cargarComunidades() {
+
+        let comunidades = JSON.parse(
+            localStorage.getItem('mis_comunidades')
+        ) || [];
+
+
+        const lista = document.getElementById('listaComunidades');
+
+        const seccion = document.getElementById('seccionComunidades');
+
+
+        lista.innerHTML = '';
+
+
+        if (comunidades.length > 0) {
+
+            seccion.style.display = 'block';
+
+
+            comunidades.forEach(c => {
+
+                let li = document.createElement('li');
+
+                let a = document.createElement('a');
+
+
+                a.href = 'board.php?tablero=' + encodeURIComponent(c);
+
+                a.textContent = '/' + c + '/';
+
+
+                li.appendChild(a);
+
+                lista.appendChild(li);
+
+            });
+
+        } else {
+
+            seccion.style.display = 'none';
+
+        }
+
+    }
+
+
+    // BUSCADOR DE TABLEROS
+
+    function filtrarTableros() {
+
+        let filtro = document.getElementById(
+            'buscadorTableros'
+        ).value.toLowerCase();
+
+
+        let enlaces = document.querySelectorAll(
+            '.board-category a'
+        );
+
+
+        enlaces.forEach(a => {
+
+            let texto = a.textContent.toLowerCase();
+
+
+            if (texto.includes(filtro)) {
+
+                a.parentElement.style.display = '';
+
+            } else {
+
+                a.parentElement.style.display = 'none';
+
+            }
+
+        });
+
+    }
+
+    </script>
+
+
+    <!-- ==================================
+         PIE DE PÁGINA
+    =================================== -->
+
+    <footer class="pie">
+
+        <div class="logo-footer">
+
+            <img
+                src="../css/img/Isotipo_fblanco.png"
+                alt="12 CHAN Logo Blanco"
+            >
+
+        </div>
+
+        <strong>12 CHAN</strong>
+
+        <span>Imageboard Project v1.0</span>
+
     </footer>
 
 </body>
+
 </html>
