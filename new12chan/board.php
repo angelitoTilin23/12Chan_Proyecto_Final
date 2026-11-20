@@ -25,10 +25,31 @@ try {
 }
 
 // ==========================================
-// TABLERO ACTUAL
+// IDENTIFICAR TABLERO DESDE LA BASE DE DATOS
 // ==========================================
 
 $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
+
+$stmtTablero = $pdo->prepare(
+    "SELECT Tablero_ID, Nombre, Slug
+     FROM tableros
+     WHERE Slug = ?
+     LIMIT 1"
+);
+
+$stmtTablero->execute([$tablero_actual]);
+
+$tablero = $stmtTablero->fetch();
+
+if (!$tablero) {
+    http_response_code(404);
+    die("El tablón solicitado no existe.");
+}
+
+// Datos oficiales del tablero
+$tablero_id = (int) $tablero['Tablero_ID'];
+$tablero_actual = $tablero['Slug'];
+$tablero_mostrar = $tablero['Nombre'];
 
 ?>
 
@@ -37,10 +58,9 @@ $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
 
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>12 CHAN - Tablón: /<?php echo htmlspecialchars($tablero_actual); ?>/</title>
+    <title>12 CHAN - Tablón: <?php echo htmlspecialchars($tablero_mostrar); ?></title>
 
     <link rel="stylesheet" href="../css/board_style.css">
 </head>
@@ -86,7 +106,6 @@ $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
                     type="text"
                     id="buscadorTableros"
                     placeholder="Buscar tableros..."
-                    onkeyup="filtrarTableros()"
                 >
 
                 <!-- Crear nuevas comunidades -->
@@ -100,7 +119,7 @@ $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
                         style="margin-bottom: 5px;"
                     >
 
-                    <button type="button" onclick="crearTablero()">
+                    <button type="button">
                         Crear tablero
                     </button>
 
@@ -189,12 +208,11 @@ $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
             <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
 
                 <h2 style="color: #007548;">
-                    Tablón: /<?php echo htmlspecialchars($tablero_actual); ?>/
+                    Tablón: <?php echo htmlspecialchars($tablero_mostrar); ?>
                 </h2>
 
                 <button
                     type="button"
-                    onclick="toggleFormulario()"
                     id="btnToggleForm"
                     style="padding: 11px 20px; background-color: #007548; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;"
                 >
@@ -215,7 +233,7 @@ $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
             >
 
                 <h3>
-                    Compartir en el tablón: /<?php echo htmlspecialchars($tablero_actual); ?>/
+                    Compartir en el tablón: <?php echo htmlspecialchars($tablero_mostrar); ?>
                 </h3>
 
                 <form
@@ -224,10 +242,18 @@ $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
                     enctype="multipart/form-data"
                 >
 
+                    <!-- IMPORTANTE: conservar el identificador original -->
+
+                    <input
+                        type="hidden"
+                        name="tablero_id"
+                        value="<?php echo $tablero_id; ?>"
+                    >
+
                     <input
                         type="hidden"
                         name="tablero"
-                        value="<?php echo htmlspecialchars($tablero_actual); ?>"
+                        value="<?php echo htmlspecialchars($tablero_actual, ENT_QUOTES, 'UTF-8'); ?>"
                     >
 
 
@@ -297,7 +323,7 @@ $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
 
 
                     <button type="submit">
-                        Compartir ahora en /<?php echo htmlspecialchars($tablero_actual); ?>/
+                        Compartir ahora en <?php echo htmlspecialchars($tablero_mostrar); ?>
                     </button>
 
                 </form>
@@ -319,12 +345,13 @@ $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
                 try {
 
                     $stmt = $pdo->prepare(
-                        "SELECT * FROM publicaciones
-                         WHERE Tablero = ?
+                        "SELECT *
+                         FROM publicaciones
+                         WHERE Tablero_ID = ?
                          ORDER BY Pub_ID DESC"
                     );
 
-                    $stmt->execute([$tablero_actual]);
+                    $stmt->execute([$tablero_id]);
 
                     $publicaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -419,176 +446,6 @@ $tablero_actual = $_GET['tablero'] ?? 'cultura_japonesa';
         </section>
 
     </main>
-
-
-    <!-- ==================================
-         JAVASCRIPT
-         GESTIÓN DE COMUNIDADES Y BUSCADOR
-    =================================== -->
-
-    <script>
-
-    document.addEventListener("DOMContentLoaded", function() {
-
-        cargarComunidades();
-
-    });
-
-
-    // MOSTRAR Y OCULTAR FORMULARIO
-
-    function toggleFormulario() {
-
-        const formContainer = document.getElementById('formPublicarContainer');
-
-        const btn = document.getElementById('btnToggleForm');
-
-
-        if (formContainer.style.display === 'none') {
-
-            formContainer.style.display = 'block';
-
-            btn.textContent = 'Cancelar publicación';
-
-            btn.style.backgroundColor = '#555';
-
-        } else {
-
-            formContainer.style.display = 'none';
-
-            btn.textContent = '+ Crear publicación';
-
-            btn.style.backgroundColor = '#007548';
-
-        }
-
-    }
-
-
-    // CREAR NUEVA COMUNIDAD
-
-    function crearTablero() {
-
-        const input = document.getElementById('nuevoTableroInput');
-
-        let nombre = input.value.trim().toLowerCase().replace(/\s+/g, '_');
-
-
-        if (!nombre) {
-
-            alert('Escribe un nombre para la comunidad.');
-
-            return;
-
-        }
-
-
-        let comunidades = JSON.parse(
-            localStorage.getItem('mis_comunidades')
-        ) || [];
-
-
-        if (!comunidades.includes(nombre)) {
-
-            comunidades.push(nombre);
-
-            localStorage.setItem(
-                'mis_comunidades',
-                JSON.stringify(comunidades)
-            );
-
-        }
-
-
-        window.location.href =
-            'board.php?tablero=' + encodeURIComponent(nombre);
-
-    }
-
-
-    // CARGAR COMUNIDADES GUARDADAS
-
-    function cargarComunidades() {
-
-        let comunidades = JSON.parse(
-            localStorage.getItem('mis_comunidades')
-        ) || [];
-
-
-        const lista = document.getElementById('listaComunidades');
-
-        const seccion = document.getElementById('seccionComunidades');
-
-
-        lista.innerHTML = '';
-
-
-        if (comunidades.length > 0) {
-
-            seccion.style.display = 'block';
-
-
-            comunidades.forEach(c => {
-
-                let li = document.createElement('li');
-
-                let a = document.createElement('a');
-
-
-                a.href = 'board.php?tablero=' + encodeURIComponent(c);
-
-                a.textContent = '/' + c + '/';
-
-
-                li.appendChild(a);
-
-                lista.appendChild(li);
-
-            });
-
-        } else {
-
-            seccion.style.display = 'none';
-
-        }
-
-    }
-
-
-    // BUSCADOR DE TABLEROS
-
-    function filtrarTableros() {
-
-        let filtro = document.getElementById(
-            'buscadorTableros'
-        ).value.toLowerCase();
-
-
-        let enlaces = document.querySelectorAll(
-            '.board-category a'
-        );
-
-
-        enlaces.forEach(a => {
-
-            let texto = a.textContent.toLowerCase();
-
-
-            if (texto.includes(filtro)) {
-
-                a.parentElement.style.display = '';
-
-            } else {
-
-                a.parentElement.style.display = 'none';
-
-            }
-
-        });
-
-    }
-
-    </script>
 
 
     <!-- ==================================
