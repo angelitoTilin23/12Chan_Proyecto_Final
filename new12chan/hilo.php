@@ -39,6 +39,7 @@ try {
     <meta charset="UTF-8">
     <title>12 CHAN - Hilo #<?php echo $hilo['Pub_ID']; ?></title>
     <link rel="stylesheet" href="../css/board_style.css">
+    <script src="../js/app.js" defer></script>
 </head>
 
 <body>

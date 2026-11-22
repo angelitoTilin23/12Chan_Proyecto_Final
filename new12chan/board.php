@@ -63,6 +63,7 @@ $tablero_mostrar = $tablero['Nombre'];
     <title>12 CHAN - Tablón: <?php echo htmlspecialchars($tablero_mostrar); ?></title>
 
     <link rel="stylesheet" href="../css/board_style.css">
+    <script src="../js/app.js" defer></script>
 </head>
 
 <body>
@@ -134,9 +135,18 @@ $tablero_mostrar = $tablero['Nombre'];
 
                 <h3>COMUNIDADES</h3>
 
-                <ul id="listaComunidades" class="lista-enlaces">
-                    <!-- Comunidades cargadas dinámicamente -->
-                </ul>
+               <ul id="listaComunidades" class="lista-enlaces">
+    <?php
+    $stmtComunidades = $pdo->query(
+        "SELECT Nombre, Slug FROM tableros WHERE Tablero_ID > 15 ORDER BY Tablero_ID ASC"
+    );
+    foreach ($stmtComunidades as $com) {
+        $slugSafe = htmlspecialchars($com['Slug'], ENT_QUOTES, 'UTF-8');
+        $nombreSafe = htmlspecialchars($com['Nombre'], ENT_QUOTES, 'UTF-8');
+        echo "<li><a href='board.php?tablero={$slugSafe}'>{$nombreSafe}</a></li>";
+    }
+    ?>
+</ul>
 
             </div>
 
